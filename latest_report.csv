@@ -1,0 +1,2 @@
+uuid,name,children,befores,afters,start,stop
+5d0d5ded-e9f5-43d6-bfa6-ed4d20fc4320,BookingTest,["089e0252-00ba-4950-a519-35a213cb1c46"],[{"attachments":[],"stage":"finished","stop":1682779115047,"name":"setUp","start":1682779113526,"description":"","steps":[],"parameters":[],"status":"passed"}],[{"attachments":[],"stage":"finished","stop":1682779150560,"name":"tearDown","start":1682779150224,"description":"","steps":[],"parameters":[],"status":"passed"}],1682779113506,1682779150569
