@@ -1,5 +1,7 @@
+package Tests;
+
 import Helpers.NumberHelper;
-import Infrastructure.*;
+import Pages.Booking.BasePage;
 import Pages.Booking.GeniusModalWindow;
 import Pages.Booking.HomePage;
 import Pages.Booking.SearchResultPage;
@@ -7,32 +9,20 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Step;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-public class BookingTest {
-
-    private static WebDriver driver;
-
-    @BeforeClass
-    public static void setUp() {
-        //Тест проходит на грузинской локале, тк букинг не работает с российской
-        String locale = "ka-GE";
-        driver = DriverFactory.createDriver("chrome", locale);
-    }
+public class BookingTest extends BaseTest {
 
     @Test
     @Description("Test to open booking.com and search for a location")
     @Severity(SeverityLevel.NORMAL)
-    public void searchLocationOnBooking() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void searchLocationOnBooking() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InterruptedException {
         navigateToBooking();
         setOccupancyOnBooking();
         searchForLocation();
@@ -69,13 +59,9 @@ public class BookingTest {
 
     @Step
     @Description("Apply budget filter")
-    private void applyBudgetFilter() {
+    private void applyBudgetFilter() throws InterruptedException {
         SearchResultPage searchResultPage = new SearchResultPage(driver);
         searchResultPage.setBudgetFilter("2", "100", "200");
-
-        synchronized (searchResultPage) {
-            Awaiter.waitOnObject(searchResultPage, 5000);
-        }
     }
 
     @Step
@@ -95,7 +81,7 @@ public class BookingTest {
         maxPropertyCard.click();
 
         synchronized (driver) {
-            Awaiter.waitOnObject(driver, 5000);
+            BasePage.waitOnObject(driver, 5000);
         }
     }
 
@@ -103,16 +89,8 @@ public class BookingTest {
     @Description("Take screenshot")
     private void takeScreenShotOfCard() {
         //Выбираем открывшийся таб с гостиницей
-        TabContext tabContext = new TabContext(driver);
-        tabContext.switchToTab(1);
-        Screenshot.takeScreenshot(driver);
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        driver.quit();
-        //Генерация отчета по последнему json от Allure в виде csv
-        AllureCsvReportGenerator.GenerateCsvReport();
+        SearchResultPage searchResultPage = new SearchResultPage(driver);
+        searchResultPage.switchTabAndTakeScreenshot();
     }
 }
 

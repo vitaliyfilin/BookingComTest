@@ -1,6 +1,5 @@
 package Pages.Booking;
 
-import Infrastructure.Awaiter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,12 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class SearchResultPage {
-    private final WebDriver driver;
+public class SearchResultPage extends BasePage {
     private final By resultStats = By.xpath("//*[@data-testid='property-card']");
 
     public SearchResultPage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public List<String> getResultStats() {
@@ -39,19 +37,24 @@ public class SearchResultPage {
         return pricesList;
     }
 
-    public void setBudgetFilter(String checkBoxNumber, String offsetLeft, String offsetRight) {
+    public void setBudgetFilter(String checkBoxNumber, String offsetLeft, String offsetRight) throws InterruptedException {
         /*Пришлось добавить обходной вариант с try/catch, тк по непонятному алгоритму боковой фильтр
                 произвольно менятся от чекбокса на слайдер*/
         try {
             WebElement budgetCheckbox = driver.findElement(By.xpath("//*[contains(text(), 'Your Budget')]//following::div[contains(@data-filters-item, 'pri=" + checkBoxNumber + "')]"));
             budgetCheckbox.click();
+
+            synchronized (driver) {
+                waitOnObject(driver, 5000);
+            }
         } catch (Exception e) {
             {
                 WebElement budgetSliderRight = driver.findElement(By.xpath("//div[@style='left:100%']"));
                 Actions sliderAction = new Actions(driver);
                 sliderAction.clickAndHold(budgetSliderRight).moveByOffset(findSliderOffset(offsetRight), 0).release().perform();
+
                 synchronized (driver) {
-                    Awaiter.waitOnObject(driver, 5000);
+                    waitOnObject(driver, 5000);
                 }
 
             }
@@ -89,5 +92,10 @@ public class SearchResultPage {
             case "200" -> -100;
             default -> 0;
         };
+    }
+
+    public void switchTabAndTakeScreenshot() {
+        switchToTab(1);
+        takeScreenshot(driver);
     }
 }

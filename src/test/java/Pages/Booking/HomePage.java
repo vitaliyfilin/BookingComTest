@@ -12,15 +12,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.List;
 
-public class HomePage {
-    private final WebDriver driver;
+public class HomePage extends BasePage {
     private final By searchBox = By.xpath("//input[@name='ss']");
     private final By searchButton = By.xpath("//*[text()='Search']");
     private final By checkInField = By.xpath("//*[@data-testid='date-display-field-start']");
     private final ControlFactory controlFactory;
 
     public HomePage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
         this.controlFactory = new ControlFactory(driver);
     }
 
