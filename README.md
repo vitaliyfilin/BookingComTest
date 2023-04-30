@@ -1,5 +1,4 @@
 # BookingComTest
-# Описание проекта
 Этот репозиторий содержит базовые тесты для тестирования пользовательского интерфейса Booking.com, используя Java, Selenium Webdriver, Page Object Model и шаблон Control Factory.
 
 # Требования
