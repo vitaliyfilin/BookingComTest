@@ -68,7 +68,7 @@ public class BookingTest extends BaseTest {
     private void verifyPricesInBudgetRange() {
         SearchResultPage searchResultPage = new SearchResultPage(driver);
         //Проверяем, попадает ли в указанный ценовой диапазон выдача результатов
-        Assert.assertTrue(NumberHelper.isWithinRange(searchResultPage.getAllPricesFromStats(searchResultPage.getResultStats()), 5, 500, 4));
+        Assert.assertTrue(NumberHelper.isWithinRange(searchResultPage.getAllPricesFromStats(searchResultPage.getResultStats(), "GEL"), 5, 500, 4));
     }
 
     @Step

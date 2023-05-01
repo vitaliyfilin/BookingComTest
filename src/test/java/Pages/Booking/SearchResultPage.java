@@ -24,8 +24,8 @@ public class SearchResultPage extends BasePage {
         return resultStatsElement.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
-    public List<Long> getAllPricesFromStats(List<String> strings) {
-        Pattern pattern = Pattern.compile("GEL ([0-9,]+)");
+    public List<Long> getAllPricesFromStats(List<String> strings, String currencyAbbreviation) {
+        Pattern pattern = Pattern.compile(String.format("%s ([0-9,]+)", currencyAbbreviation.toUpperCase()));
         return strings.stream()
                 .map(pattern::matcher)
                 .filter(Matcher::find)
