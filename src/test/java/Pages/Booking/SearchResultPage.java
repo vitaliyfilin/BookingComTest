@@ -26,16 +26,13 @@ public class SearchResultPage extends BasePage {
 
     public List<Long> getAllPricesFromStats(List<String> strings) {
         Pattern pattern = Pattern.compile("GEL ([0-9,]+)");
-        List<Long> pricesList = new ArrayList<>();
-        for (String s : strings) {
-            Matcher matcher = pattern.matcher(s);
-            if (matcher.find()) {
-                String priceStr = matcher.group(1);
-                Long price = Long.valueOf(priceStr.replaceAll(",", ""));
-                pricesList.add(price);
-            }
-        }
-        return pricesList;
+        return strings.stream()
+                .map(pattern::matcher)
+                .filter(Matcher::find)
+                .map(matcher -> matcher.group(1))
+                .map(priceStr -> priceStr.replaceAll(",", ""))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
     }
 
     public void setBudgetFilter(String checkBoxNumber, String offsetLeft, String offsetRight) {
@@ -68,21 +65,21 @@ public class SearchResultPage extends BasePage {
         WebElement maxPropertyCard = null;
 
         for (WebElement propertyCard : propertyCards) {
-            double score = Double.parseDouble(propertyCard.findElement(By.xpath("//div[contains(@aria-label, 'Scored')]"))
+            double score = Double.parseDouble(propertyCard.findElement(By.xpath(".//div[contains(@aria-label, 'Scored')]"))
                     .getText());
-            String priceStr = propertyCard.findElement(By.xpath("//*[contains(@data-testid, 'discounted')]"))
+            String priceStr = propertyCard.findElement(By.xpath(".//*[contains(@data-testid, 'discounted')]"))
                     .getText().replaceAll("[^\\d.]", "");
             double price = Double.parseDouble(priceStr);
 
-            if (score > maxScore || (score == maxScore && price > maxPrice)) {
+            if (score > maxScore && price > maxPrice) {
                 maxScore = score;
                 maxPrice = price;
                 maxPropertyCard = propertyCard;
             }
         }
-
         return maxPropertyCard;
     }
+
 
     public int findSliderOffset(String expression) {
         return switch (expression) {
