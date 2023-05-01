@@ -21,9 +21,9 @@ public class BasePage {
     private static final Duration POLLING = Duration.ofMillis(100); //milliseconds
 
     protected WebDriver driver;
-    private final WebDriverWait wait;
+    protected final WebDriverWait wait;
 
-    private ArrayList<String> tabHandles;
+    private final ArrayList<String> tabHandles;
 
 
     public BasePage(WebDriver driver) {
