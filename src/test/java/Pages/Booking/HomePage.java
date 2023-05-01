@@ -1,14 +1,15 @@
 package Pages.Booking;
 
+import Exceptions.ControlInstantiationException;
 import Pages.BookingControls.Button;
 import Pages.BookingControls.ControlFactory;
 import Pages.BookingControls.Field;
 import Pages.BookingControls.SearchBox;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,20 +24,28 @@ public class HomePage extends BasePage {
         this.controlFactory = new ControlFactory(driver);
     }
 
-    public void searchFor(String searchQuery) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        SearchBox searchBoxElement = controlFactory.create(SearchBox.class, searchBox);
-        searchBoxElement.sendKeys(searchQuery);
-        Button searchButtonElement = controlFactory.create(Button.class, searchButton);
-        searchButtonElement.click();
+    public void searchFor(String searchQuery) {
+        try {
+            SearchBox searchBoxElement = controlFactory.create(SearchBox.class, searchBox);
+            searchBoxElement.sendKeys(searchQuery);
+            Button searchButtonElement = controlFactory.create(Button.class, searchButton);
+            searchButtonElement.click();
+        } catch (ControlInstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setCheckInOutDate(List<LocalDate> localDate) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Field field = controlFactory.create(Field.class, checkInField);
-        field.click();
+    public void setCheckInOutDate(List<LocalDate> localDates) {
+        try {
+            Field field = controlFactory.create(Field.class, checkInField);
+            field.click();
 
-        for (LocalDate i : localDate) {
-            WebElement checkInOutDate = driver.findElement(By.xpath("//*[@data-date='" + i.toString() + "']"));
-            checkInOutDate.click();
+            for (LocalDate localDate : localDates) {
+                WebElement checkInOutDate = driver.findElement(By.xpath("//*[@data-date='" + localDate.toString() + "']"));
+                checkInOutDate.click();
+            }
+        } catch (NoSuchElementException | ControlInstantiationException e) {
+            e.printStackTrace();
         }
     }
 

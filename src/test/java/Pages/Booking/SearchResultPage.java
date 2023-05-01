@@ -1,6 +1,7 @@
 package Pages.Booking;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -37,27 +38,24 @@ public class SearchResultPage extends BasePage {
         return pricesList;
     }
 
-    public void setBudgetFilter(String checkBoxNumber, String offsetLeft, String offsetRight) throws InterruptedException {
+    public void setBudgetFilter(String checkBoxNumber, String offsetLeft, String offsetRight) {
         /*Пришлось добавить обходной вариант с try/catch, тк по непонятному алгоритму боковой фильтр
                 произвольно менятся от чекбокса на слайдер*/
         try {
             WebElement budgetCheckbox = driver.findElement(By.xpath("//*[contains(text(), 'Your Budget')]//following::div[contains(@data-filters-item, 'pri=" + checkBoxNumber + "')]"));
             budgetCheckbox.click();
-
-            synchronized (driver) {
-                waitOnObject(driver, 5000);
-            }
-        } catch (Exception e) {
-            {
+        } catch (NoSuchElementException e) {
+            try {
                 WebElement budgetSliderRight = driver.findElement(By.xpath("//div[@style='left:100%']"));
                 Actions sliderAction = new Actions(driver);
                 sliderAction.clickAndHold(budgetSliderRight).moveByOffset(findSliderOffset(offsetRight), 0).release().perform();
-
-                synchronized (driver) {
-                    waitOnObject(driver, 5000);
-                }
-
+            } catch (NoSuchElementException e2) {
+                e.printStackTrace();
             }
+        }
+
+        synchronized (driver) {
+            waitOnObject(driver, 5000);
         }
     }
 

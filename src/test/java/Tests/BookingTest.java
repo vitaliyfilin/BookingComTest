@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.Arrays;
 
@@ -22,7 +21,7 @@ public class BookingTest extends BaseTest {
     @Test
     @Description("Test to open booking.com and search for a location")
     @Severity(SeverityLevel.NORMAL)
-    public void searchLocationOnBooking() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InterruptedException {
+    public void searchLocationOnBooking() {
         navigateToBooking();
         setOccupancyOnBooking();
         searchForLocation();
@@ -34,7 +33,7 @@ public class BookingTest extends BaseTest {
 
     @Step
     @Description("Navigate to Booking.com")
-    private void navigateToBooking() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    private void navigateToBooking() {
         driver.get("https://www.booking.com/");
         //Ожидаем появления модального окна
         GeniusModalWindow geniusModalWindow = new GeniusModalWindow(driver);
@@ -50,7 +49,7 @@ public class BookingTest extends BaseTest {
 
     @Step
     @Description("Search for location")
-    private void searchForLocation() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    private void searchForLocation() {
         HomePage homePage = new HomePage(driver);
         //Дата сдвигается автоматически
         homePage.setCheckInOutDate(Arrays.asList(LocalDate.now(), LocalDate.now().plusDays(4)));
@@ -59,7 +58,7 @@ public class BookingTest extends BaseTest {
 
     @Step
     @Description("Apply budget filter")
-    private void applyBudgetFilter() throws InterruptedException {
+    private void applyBudgetFilter() {
         SearchResultPage searchResultPage = new SearchResultPage(driver);
         searchResultPage.setBudgetFilter("2", "100", "200");
     }
